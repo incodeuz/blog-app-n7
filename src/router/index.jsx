@@ -6,6 +6,8 @@ import Details from "../pages/Details";
 import Layout from "../layout";
 import SignIn from "../pages/Auth/SignIn";
 import SignUp from "../pages/Auth/SignUp";
+import EditPost from "../pages/Posts/Edit";
+import CreatePost from "../pages/Posts/Create";
 
 const router = createBrowserRouter([
   {
@@ -20,6 +22,14 @@ const router = createBrowserRouter([
       {
         path: "details/:id",
         element: <Details />,
+      },
+      {
+        path: "edit/:id",
+        element: <EditPost />,
+      },
+      {
+        path: "create",
+        element: <CreatePost />,
       },
     ],
   },
