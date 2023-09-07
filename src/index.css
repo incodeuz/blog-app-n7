@@ -44,3 +44,12 @@ body {
   outline: none !important;
   border: none !important;
 }
+
+.ant-message-notice-content {
+  transform: scale(1.5);
+  margin-top: 50px;
+}
+
+.ant-btn-primary {
+  background-color: rgb(0, 123, 255);
+}

@@ -1,9 +1,40 @@
-import React from "react";
-import { message } from "antd";
+import React, { useState } from "react";
+import { Button, message } from "antd";
 import { useNavigate, Link } from "react-router-dom";
+import useUsersApi from "../../../service/users";
 
 const SignIn = () => {
+  const { signIn } = useUsersApi();
   const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
+  const [values, setValues] = useState({
+    username: "",
+    password: "",
+  });
+
+  const signInFunc = async () => {
+    try {
+      setIsLoading(true);
+      const res = await signIn(values);
+      const data = res.data;
+      console.log(data);
+      localStorage.setItem("token", data?.token);
+      localStorage.setItem("username", data?.user.username);
+      localStorage.setItem("my_id", data?.user.id);
+      localStorage.setItem("full_name", data?.user.full_name);
+      data && message.success("Successfully logged in");
+      data.length && setIsLoading(false);
+      return navigate("/");
+    } catch (error) {
+      if (error.response.status === 400) {
+        setIsLoading(false);
+        return message.error("Username or Password wrong");
+      } else {
+        error && message.error(error.message);
+      }
+    }
+  };
+
   return (
     <div className="w-full h-screen flex items-center">
       <div className="max-w-[600px] w-full mx-auto">
@@ -25,6 +56,12 @@ const SignIn = () => {
             Your username
           </label>
           <input
+            onChange={(e) =>
+              setValues((prevState) => ({
+                ...prevState,
+                username: e.target.value,
+              }))
+            }
             type="text"
             id="text"
             className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"
@@ -40,6 +77,12 @@ const SignIn = () => {
             Your password
           </label>
           <input
+            onChange={(e) =>
+              setValues((prevState) => ({
+                ...prevState,
+                password: e.target.value,
+              }))
+            }
             type="password"
             id="password"
             className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"
@@ -59,12 +102,14 @@ const SignIn = () => {
           </p>
         </div>
 
-        <button
-          onClick={() => message.success("Success")}
-          className="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+        <Button
+          className="w-full p-5 flex items-center justify-center text-[18px]"
+          type="primary"
+          onClick={() => signInFunc()}
+          loading={isLoading}
         >
           Sign in
-        </button>
+        </Button>
       </div>
     </div>
   );
