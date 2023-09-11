@@ -151,6 +151,7 @@ const SignUp = () => {
           type="primary"
           onClick={() => signUpFunc()}
           loading={isLoading}
+          disabled={isLoading}
         >
           Sign Up
         </Button>

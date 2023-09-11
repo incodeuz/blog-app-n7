@@ -107,6 +107,7 @@ const SignIn = () => {
           type="primary"
           onClick={() => signInFunc()}
           loading={isLoading}
+          disabled={isLoading}
         >
           Sign in
         </Button>

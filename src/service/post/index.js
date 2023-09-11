@@ -1,9 +1,19 @@
 import api from "../axios";
 
+const config = {
+  headers: {
+    "Content-Type": "application/json",
+    Authorization: `Bearer ${localStorage.getItem("token")}`,
+  },
+};
 
-const postAPI = {
-    getPost: async () => api.get('/posts'),
-    getOneItem: async (id) => api.get(`/posts/${id}`)
-}
+const usePostsApi = () => {
+  const createPost = async (data) => api.post("/blog", { ...data }, config);
+  //   const signUp = async (data) => api.post("/user/signup", data);
 
-export default postAPI;
+  return {
+    createPost,
+  };
+};
+
+export default usePostsApi;

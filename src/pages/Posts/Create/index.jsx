@@ -1,22 +1,53 @@
 import React, { useRef, useState } from "react";
 import { Editor } from "@tinymce/tinymce-react";
-import parse from "html-react-parser";
+import { Navigate, useNavigate } from "react-router-dom";
+import { Button, message } from "antd";
+import usePostsApi from "../../../service/post";
 
 const CreatePost = () => {
-  const [data, setData] = useState("");
+  const [title, setTitle] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const editorRef = useRef(null);
-  const log = () => {
-    if (editorRef.current) {
-      setData(editorRef.current.getContent());
+  const { createPost } = usePostsApi();
+  const navigate = useNavigate();
+
+  const createPostFunc = async () => {
+    if (editorRef.current && title.length > 0) {
+      try {
+        setIsLoading(true);
+        const res = await createPost({
+          title,
+          body: editorRef.current.getContent(),
+          user_id: localStorage.getItem("my_id"),
+        });
+
+        const data = res.data;
+        data && message.success("Successfully created post");
+        data.length && setIsLoading(false);
+        return navigate("/");
+      } catch (error) {
+        setIsLoading(false);
+        message.error(error.message);
+        console.log(error);
+      }
+    } else {
+      message.error("Please fill all inputs!");
     }
   };
+
+  if (!localStorage.getItem("token")) {
+    return <Navigate to="/sign-in" />;
+  }
   return (
     <div className="container">
       <input
+        onChange={(e) => setTitle(e.target.value)}
         id="input"
         type="text"
-        className="focus:ring-0 mt-5"
+        className="focus:ring-0 mt-[50px] mb-7"
         placeholder="Post title"
+        required
+        value={title}
       />
       <Editor
         onInit={(evt, editor) => (editorRef.current = editor)}
@@ -58,9 +89,15 @@ const CreatePost = () => {
         }}
       />
 
-      <button onClick={log}>Create post</button>
-
-      {parse(data)}
+      <Button
+        className="w-full p-5 flex items-center justify-center text-[18px] mt-[30px]"
+        type="primary"
+        onClick={() => createPostFunc()}
+        loading={isLoading}
+        disabled={isLoading}
+      >
+        Create post
+      </Button>
     </div>
   );
 };
