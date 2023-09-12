@@ -6,7 +6,7 @@ const Layout = () => {
   return (
     <>
       <header>
-        <nav className="py-[10px] bg-slate-100">
+        <nav className="py-[10px] shadow-sm">
           <Navbar />
         </nav>
 

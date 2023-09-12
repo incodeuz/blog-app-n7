@@ -58,7 +58,8 @@ body {
   background-color: rgb(0, 123, 255);
 }
 
-.card-title {
+.card-title,
+.details-title {
   background: linear-gradient(90deg, #ff8a00 -0.07%, #bd00ff 100.07%);
   background-clip: text;
   -webkit-background-clip: text;
