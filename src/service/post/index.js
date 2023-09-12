@@ -9,10 +9,11 @@ const config = {
 
 const usePostsApi = () => {
   const createPost = async (data) => api.post("/blog", { ...data }, config);
-  //   const signUp = async (data) => api.post("/user/signup", data);
+  const getPosts = async () => api.get("/blog");
 
   return {
     createPost,
+    getPosts,
   };
 };
 

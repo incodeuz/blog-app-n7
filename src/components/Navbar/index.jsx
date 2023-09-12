@@ -11,7 +11,12 @@ const Navbar = () => {
   const { pathname } = useLocation();
   return (
     <div className="container flex items-center justify-between">
-      <img src={Logo} alt="Logo" />
+      <img
+        src={Logo}
+        alt="Logo"
+        onClick={() => navigate("/")}
+        className="cursor-pointer"
+      />
       {localStorage.getItem("token") ? (
         <div className="flex items-center gap-[20px] m-2">
           <PlusCircleOutlined

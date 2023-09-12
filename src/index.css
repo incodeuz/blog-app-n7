@@ -12,6 +12,10 @@
   font-family: "Inter", sans-serif;
 }
 
+input {
+  outline: none !important;
+}
+
 a {
   text-decoration: none;
 }
@@ -52,4 +56,19 @@ body {
 
 .ant-btn-primary {
   background-color: rgb(0, 123, 255);
+}
+
+.card-title {
+  background: linear-gradient(90deg, #ff8a00 -0.07%, #bd00ff 100.07%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: inline-block;
+  border-bottom: 2px solid transparent;
+}
+
+.card-title:hover {
+  cursor: pointer;
+  transition: all 0.2s linear;
+  border-bottom: 2px solid black;
 }
