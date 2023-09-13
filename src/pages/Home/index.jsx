@@ -61,7 +61,6 @@ const Home = () => {
             list="authors"
             className="w-[250px] rounded-lg"
             placeholder="Search for authors..."
-            // onChange={(e) => searchData2(e.target.value)}
           />
           <datalist id="authors">
             {users?.map((v) => (
@@ -79,22 +78,6 @@ const Home = () => {
           <div className="w-full flex items-center justify-center h-screen fixed top-0 left-0">
             <Ping className="mx-auto" size={155} speed={2} color="black" />
           </div>
-          // <ContentLoader
-          //   speed={2}
-          //   width={400}
-          //   height={150}
-          //   viewBox="0 0 400 150"
-          //   backgroundColor="#f3f3f3"
-          //   foregroundColor="#ecebeb"
-          // >
-          //   <rect x="5" y="8" rx="3" ry="3" width="88" height="6" />
-          //   <rect x="7" y="32" rx="3" ry="3" width="52" height="6" />
-          //   <rect x="0" y="56" rx="3" ry="3" width="410" height="6" />
-          //   <rect x="0" y="72" rx="3" ry="3" width="380" height="6" />
-          //   <rect x="0" y="88" rx="3" ry="3" width="178" height="6" />
-          //   <rect x="85" y="30" rx="3" ry="3" width="52" height="6" />
-          //   <rect x="1" y="103" rx="3" ry="3" width="380" height="6" />
-          // </ContentLoader>
         )}
       </div>
     </>
