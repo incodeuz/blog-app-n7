@@ -9,7 +9,18 @@ const Card = ({ body, views, title, createdAt, user, id }) => {
       <Link to={localStorage.getItem("token") ? `/details/${id}` : "/sign-in"}>
         <h3 className="card-title text-[28px] font-bold mb-[9px]">{title}</h3>
       </Link>
-      <p className="text-[17px] font-normal mb-[25px]">{parse(body.trim())}</p>
+
+      <div
+        className="w-[full] flex flex-wrap"
+        style={{ wordWrap: "break-word", whiteSpace: "break-spaces" }}
+      >
+        <p
+          style={{ wordWrap: "break-word" }}
+          className="text-[18px] font-normal mb-[25px] flex flex-wrap break-words"
+        >
+          {parse(body.trim())}
+        </p>
+      </div>
 
       <p className="text-[17px] font-bold mb-[10px] hover:underline cursor-pointer">
         {localStorage.getItem("my_id") === user.id ? "👤 You" : user?.username}

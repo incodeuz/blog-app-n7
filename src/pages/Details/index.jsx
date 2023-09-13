@@ -1,20 +1,30 @@
 import parse from "html-react-parser";
 import EyeIcon from "../../assets/eye.svg";
-import { Navigate, useParams } from "react-router-dom";
+import { Navigate, useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import usePostsApi from "../../service/post";
 import { Ping } from "@uiball/loaders";
+import { Button } from "flowbite-react";
+import { Popconfirm, message } from "antd";
 
 const Details = () => {
   const { id } = useParams();
-  const { getOnePostById } = usePostsApi();
+  const { getOnePostById, deletePost } = usePostsApi();
   const [data, setData] = useState({});
+  const navigate = useNavigate();
 
   useEffect(() => {
     getOnePostById(id).then((res) => setData(res.data));
   }, []);
 
-  console.log(data);
+  const confirm = () => {
+    deletePost(id)
+      .then((res) => {
+        res.data && message.success("Task deleted successfully!");
+        return navigate("/");
+      })
+      .catch((err) => message.error(err));
+  };
 
   if (!localStorage.getItem("token")) {
     return <Navigate to="sign-in" />;
@@ -33,7 +43,32 @@ const Details = () => {
               </p>
             </div>
 
-            <button className="border rounded-lg py-2 px-4">Follow</button>
+            {localStorage.getItem("my_id") === data?.user.id ? (
+              <div className="flex items-center gap-[10px]">
+                <Button
+                  onClick={() => navigate(`/edit/${id}`)}
+                  gradientDuoTone="tealToLime"
+                  outline
+                >
+                  <p>Edit</p>
+                </Button>
+                <Popconfirm
+                  title="Delete the task"
+                  description="Are you sure to delete this task?"
+                  onConfirm={confirm}
+                  okText="Yes"
+                  cancelText="No"
+                >
+                  <Button gradientDuoTone="pinkToOrange" outline>
+                    <p>Delete</p>
+                  </Button>
+                </Popconfirm>
+              </div>
+            ) : (
+              <Button gradientDuoTone="purpleToPink" outline>
+                <p>Follow</p>
+              </Button>
+            )}
           </div>
 
           <div className="flex items-center gap-[20px] mb-[30px]">
