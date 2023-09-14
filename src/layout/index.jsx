@@ -5,17 +5,17 @@ import Navbar from "../components/Navbar";
 const Layout = () => {
   return (
     <>
-      <header>
+      <header className="sticky top-0 bg-white z-50">
         <nav className="py-[10px] shadow-sm">
           <Navbar />
         </nav>
-
-        <main>
-          <div className="container">
-            <Outlet />
-          </div>
-        </main>
       </header>
+
+      <main>
+        <div className="container">
+          <Outlet />
+        </div>
+      </main>
     </>
   );
 };

@@ -8,6 +8,7 @@ import SignIn from "../pages/Auth/SignIn";
 import SignUp from "../pages/Auth/SignUp";
 import EditPost from "../pages/Posts/Edit";
 import CreatePost from "../pages/Posts/Create";
+import Profile from "../pages/Profile";
 
 const router = createBrowserRouter([
   {
@@ -30,6 +31,10 @@ const router = createBrowserRouter([
       {
         path: "create",
         element: <CreatePost />,
+      },
+      {
+        path: "user/profile/:id",
+        element: <Profile />,
       },
     ],
   },

@@ -1,12 +1,50 @@
-import { useLocation, useNavigate } from "react-router-dom";
+import { NavLink, Navigate, useLocation, useNavigate } from "react-router-dom";
 import Logo from "../../assets/logo.svg";
 import {
   PlusCircleOutlined,
   UserOutlined,
-  CheckCircleOutlined,
+  LogoutOutlined,
+  MenuOutlined,
 } from "@ant-design/icons";
+import { Dropdown, Popconfirm } from "antd";
 
 const Navbar = () => {
+  const confirm = () => {
+    localStorage.clear();
+    window.location.reload();
+  };
+
+  const items = [
+    {
+      key: "1",
+      label: (
+        <NavLink to={`/user/profile/${localStorage.getItem("my_id")}`}>
+          <div className="flex items-center gap-[7px] text-[17px]">
+            <UserOutlined />
+            Profile
+          </div>
+        </NavLink>
+      ),
+    },
+    {
+      key: "2",
+      label: (
+        <Popconfirm
+          title="Log out"
+          description="Are you sure to log out?"
+          onConfirm={confirm}
+          okText="Yes"
+          cancelText="No"
+        >
+          <div className="hoverEffect flex items-center gap-[7px] text-[17px]">
+            <LogoutOutlined />
+            <span>Log Out</span>
+          </div>
+        </Popconfirm>
+      ),
+    },
+  ];
+
   const navigate = useNavigate();
   const { pathname } = useLocation();
   return (
@@ -24,12 +62,22 @@ const Navbar = () => {
             onClick={() => navigate("/create")}
           />
           <div className="h-[40px] w-[2px] bg-slate-500"></div>
-          <div className="flex items-center gap-2 hover:opacity-[0.5] cursor-pointer">
-            <UserOutlined className="text-[27px]" />
-            <span className="font-semibold text-[20px]">
-              {localStorage.getItem("full_name")}
-            </span>
-          </div>
+          {/*<div className="flex items-center gap-2 hover:opacity-[0.5] cursor-pointer">*/}
+          {/*  <UserOutlined className="text-[27px]" />*/}
+          {/*  <span className="font-semibold text-[20px]">*/}
+          {/*    {localStorage.getItem("full_name")}*/}
+          {/*  </span>*/}
+          {/*</div>*/}
+          <Dropdown
+            menu={{
+              items,
+            }}
+            placement="bottom"
+            trigger="click"
+            arrow
+          >
+            <MenuOutlined className="text-[25px]" />
+          </Dropdown>
         </div>
       ) : (
         <button

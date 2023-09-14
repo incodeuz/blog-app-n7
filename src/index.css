@@ -74,3 +74,15 @@ body {
   transition: all 0.2s linear;
   border-bottom: 2px solid black;
 }
+
+.hoverEffect {
+  color: rgb(255, 111, 111) !important;
+}
+
+.hoverEffect:hover {
+  color: red !important;
+}
+
+a:hover {
+  color: inherit;
+}

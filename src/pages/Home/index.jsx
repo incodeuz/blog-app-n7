@@ -71,9 +71,13 @@ const Home = () => {
       </div>
       <div className="w-[full] max-w-[800px] mx-auto">
         {datas.length > 0 ? (
-          datas?.map((post, index) => <Card key={index} {...post} />)
+          datas?.map((post, index) => (
+            <Card key={index} {...post} postID={post.id} />
+          ))
         ) : data.length > 0 ? (
-          data?.map((post, index) => <Card key={index} {...post} />)
+          data?.map((post, index) => (
+            <Card key={index} {...post} postID={post.id} />
+          ))
         ) : (
           <div className="w-full flex items-center justify-center h-screen fixed top-0 left-0">
             <Ping className="mx-auto" size={155} speed={2} color="black" />
