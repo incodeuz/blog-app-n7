@@ -1,21 +1,69 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import useUsersApi from "../../service/users";
 import { Ping } from "@uiball/loaders";
 import Card from "../../components/Card";
+import { Modal } from "antd";
+import { useDispatch, useSelector } from "react-redux";
+import { openModalFunc } from "../../store/modalSlice";
 
 const Profile = () => {
   const { id } = useParams();
   const { getOneUserById } = useUsersApi();
   const [data, setData] = useState({});
+  const dispatch = useDispatch();
+  const { openModal } = useSelector((state) => state.reducer);
+  const [title, setTitle] = useState("");
+  const navigate = useNavigate();
 
   useEffect(() => {
     getOneUserById(id).then((res) => setData(res.data));
   }, [id]);
-  console.log(data);
+
+  const showModal = (str) => {
+    dispatch(openModalFunc(true));
+    setTitle(str);
+  };
+
+  data?.followers?.map((user) => console.log(user));
 
   return (
     <>
+      <Modal
+        title={title}
+        open={openModal}
+        width="700px"
+        okButtonProps={{ style: { display: "none" } }}
+        cancelButtonProps={{ style: { display: "none" } }}
+        onCancel={() => dispatch(openModalFunc(false))}
+      >
+        <div className="flex flex-col gap-[10px] mt-[30px]">
+          {title === "Followers"
+            ? data?.followers?.map((user) => (
+                <p
+                  onClick={() => {
+                    navigate(`/user/profile/${user.follower.id}`);
+                    window.location.reload();
+                  }}
+                  className="p-2 px-3 cursor-pointer shadow-md rounded-lg border hover:border-black"
+                >
+                  {user?.follower?.username}
+                </p>
+              ))
+            : data?.followings?.map((user) => (
+                <p
+                  onClick={() => {
+                    navigate(`/user/profile/${user.following.id}`);
+                    window.location.reload();
+                  }}
+                  className="p-2 px-3 cursor-pointer shadow-md rounded-lg border hover:border-black"
+                >
+                  {user?.following?.username}
+                </p>
+              ))}
+        </div>
+      </Modal>
+
       {data.id ? (
         <div className="flex gap-[40px] w-full mt-[40px] relative">
           <div className="w-full max-w-[400px] mt-[30px] fixed">
@@ -43,13 +91,19 @@ const Profile = () => {
                   <span className="font-bold">{data?.blog.length}</span> posts
                 </p>
               </div>
-              <div className="flex items-center px-2 py-1 cursor-pointer rounded-md hover:bg-[rgba(0,0,0,0.1)]">
+              <div
+                onClick={() => showModal("Followers")}
+                className="flex items-center px-2 py-1 cursor-pointer rounded-md hover:bg-[rgba(0,0,0,0.1)]"
+              >
                 <p>
                   <span className="font-bold">{data?.followers.length}</span>{" "}
                   followers
                 </p>
               </div>
-              <div className="flex items-center px-2 py-1 cursor-pointer rounded-md hover:bg-[rgba(0,0,0,0.1)]">
+              <div
+                onClick={() => showModal("Followings")}
+                className="flex items-center px-2 py-1 cursor-pointer rounded-md hover:bg-[rgba(0,0,0,0.1)]"
+              >
                 <p>
                   <span className="font-bold">{data?.followings.length}</span>{" "}
                   followings

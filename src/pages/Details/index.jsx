@@ -5,13 +5,18 @@ import { useEffect, useState } from "react";
 import usePostsApi from "../../service/post";
 import { Ping } from "@uiball/loaders";
 import { Button } from "flowbite-react";
-import { Popconfirm, message } from "antd";
+import { Popconfirm, message, Button as Btn } from "antd";
+import useUsersApi from "../../service/users";
 
 const Details = () => {
   const { id } = useParams();
-  const { getOnePostById, deletePost } = usePostsApi();
-  const [data, setData] = useState({});
   const navigate = useNavigate();
+  const { getOnePostById, deletePost } = usePostsApi();
+  const { followToUser } = useUsersApi();
+
+  const [data, setData] = useState({});
+  const [isFollowing, setIsFollowing] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     getOnePostById(id).then((res) => setData(res.data));
@@ -26,6 +31,24 @@ const Details = () => {
       .catch((err) => message.error(err));
   };
 
+  const follow = () => {
+    setIsLoading(true);
+    followToUser({ following_id: data?.user.id })
+      .then((res) => {
+        console.log(res);
+        if (res.data) {
+          setIsFollowing(res.data.message);
+          setIsLoading(false);
+          message.success(`You're now following ${data?.user.full_name}`);
+        }
+      })
+      .catch((err) => {
+        setIsLoading(false);
+        message.error(err);
+      });
+  };
+
+  console.log(data, isFollowing);
   if (!localStorage.getItem("token")) {
     return <Navigate to="sign-in" />;
   }
@@ -64,10 +87,16 @@ const Details = () => {
                   </Button>
                 </Popconfirm>
               </div>
+            ) : isFollowing === "Followed" ? (
+              <Btn className="py-2 px-4 h-fit">Following</Btn>
             ) : (
-              <Button gradientDuoTone="purpleToPink" outline>
-                <p>Follow</p>
-              </Button>
+              <Btn
+                loading={isLoading}
+                className="py-2 px-4 h-fit"
+                onClick={() => follow()}
+              >
+                Follow
+              </Btn>
             )}
           </div>
 
