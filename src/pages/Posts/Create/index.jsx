@@ -39,12 +39,11 @@ const CreatePost = () => {
     return <Navigate to="/sign-in" />;
   }
   return (
-    <div className="container">
+    <div className="w-full max-w-[800px] mx-auto">
       <input
         onChange={(e) => setTitle(e.target.value)}
-        id="input"
         type="text"
-        className="focus:ring-0 mt-[50px] mb-7"
+        className="mt-[50px] mb-7 p-2 px-4 focus:ring-0 focus:outline-none border-gray-300 rounded-lg w-full placeholder:text-gray-300 placeholder:text-[30px] text-[30px]"
         placeholder="Post title"
         required
         value={title}
@@ -53,7 +52,7 @@ const CreatePost = () => {
         onInit={(evt, editor) => (editorRef.current = editor)}
         initialValue="<p>This is the initial content of the editor.</p>"
         init={{
-          height: 500,
+          height: 300,
           menubar: false,
           plugins: [
             "a11ychecker",

@@ -12,11 +12,7 @@ const Details = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { getOnePostById, deletePost } = usePostsApi();
-  const { followToUser } = useUsersApi();
-
   const [data, setData] = useState({});
-  const [isFollowing, setIsFollowing] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     getOnePostById(id).then((res) => setData(res.data));
@@ -31,24 +27,6 @@ const Details = () => {
       .catch((err) => message.error(err));
   };
 
-  const follow = () => {
-    setIsLoading(true);
-    followToUser({ following_id: data?.user.id })
-      .then((res) => {
-        console.log(res);
-        if (res.data) {
-          setIsFollowing(res.data.message);
-          setIsLoading(false);
-          message.success(`You're now following ${data?.user.full_name}`);
-        }
-      })
-      .catch((err) => {
-        setIsLoading(false);
-        message.error(err);
-      });
-  };
-
-  console.log(data, isFollowing);
   if (!localStorage.getItem("token")) {
     return <Navigate to="sign-in" />;
   }
@@ -66,7 +44,7 @@ const Details = () => {
               </p>
             </div>
 
-            {localStorage.getItem("my_id") === data?.user.id ? (
+            {localStorage.getItem("my_id") === data?.user.id && (
               <div className="flex items-center gap-[10px]">
                 <Button
                   onClick={() => navigate(`/edit/${id}`)}
@@ -87,16 +65,6 @@ const Details = () => {
                   </Button>
                 </Popconfirm>
               </div>
-            ) : isFollowing === "Followed" ? (
-              <Btn className="py-2 px-4 h-fit">Following</Btn>
-            ) : (
-              <Btn
-                loading={isLoading}
-                className="py-2 px-4 h-fit"
-                onClick={() => follow()}
-              >
-                Follow
-              </Btn>
             )}
           </div>
 
@@ -113,7 +81,9 @@ const Details = () => {
           <h1 className="details-title text-[30px] font-bold mb-[9px]">
             {data?.title}
           </h1>
-          <p>{parse(data?.body.trim())}</p>
+          <div id="parse">
+            <p>{parse(data?.body.trim())}</p>
+          </div>
         </div>
       ) : (
         <div className="w-full flex items-center justify-center h-screen fixed top-0 left-0">

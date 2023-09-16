@@ -9,8 +9,13 @@ import {
 import { Dropdown, Popconfirm } from "antd";
 
 const Navbar = () => {
+  
   const confirm = () => {
     localStorage.clear();
+    localStorage.removeItem("my_id");
+    localStorage.removeItem("username");
+    localStorage.removeItem("token");
+    localStorage.removeItem("full_name");
     window.location.reload();
   };
 

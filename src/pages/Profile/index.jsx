@@ -3,29 +3,47 @@ import { useNavigate, useParams } from "react-router-dom";
 import useUsersApi from "../../service/users";
 import { Ping } from "@uiball/loaders";
 import Card from "../../components/Card";
-import { Modal } from "antd";
+import { Button, Modal } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import { openModalFunc } from "../../store/modalSlice";
 
 const Profile = () => {
   const { id } = useParams();
-  const { getOneUserById } = useUsersApi();
+  const { getOneUserById, followToUser } = useUsersApi();
+  const navigate = useNavigate();
   const [data, setData] = useState({});
   const dispatch = useDispatch();
   const { openModal } = useSelector((state) => state.reducer);
+
   const [title, setTitle] = useState("");
-  const navigate = useNavigate();
+  const [isFollow, setIsFollow] = useState({});
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     getOneUserById(id).then((res) => setData(res.data));
-  }, [id]);
+    getOneUserById(localStorage.getItem("my_id")).then((res) => {
+      res.data.followings.find((v) =>
+        v.following.id === id ? setIsFollow(true) : setIsFollow(false)
+      );
+    });
+  }, [id, isLoading]);
 
   const showModal = (str) => {
     dispatch(openModalFunc(true));
     setTitle(str);
   };
 
-  data?.followers?.map((user) => console.log(user));
+  const follow = async () => {
+    try {
+      setIsLoading(true);
+      const res = await followToUser({ following_id: id });
+      const data = await res.data;
+      data && setIsLoading(false);
+    } catch (error) {
+      console.log(error);
+      setIsLoading(false);
+    }
+  };
 
   return (
     <>
@@ -85,7 +103,7 @@ const Profile = () => {
               </div>
             </div>
 
-            <div className="mt-[60px] px-8 flex items-center justify-between">
+            <div className="mt-[80px] px-8 flex items-center justify-between">
               <div className="flex items-center px-2 py-1 rounded-md">
                 <p>
                   <span className="font-bold">{data?.blog.length}</span> posts
@@ -110,6 +128,17 @@ const Profile = () => {
                 </p>
               </div>
             </div>
+            {localStorage.getItem("my_id") !== id && (
+              <Button
+                disabled={isFollow === true}
+                loading={isLoading}
+                onClick={() => follow()}
+                className="mt-9 w-full"
+                type="primary"
+              >
+                {isFollow === true ? "Followed" : "Follow"}
+              </Button>
+            )}
           </div>
 
           <div className="ml-[450px] w-full">

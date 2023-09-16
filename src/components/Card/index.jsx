@@ -14,12 +14,17 @@ const Card = ({ body, views, title, createdAt, user, postID }) => {
       </Link>
 
       <div
-        className="w-[full] flex flex-wrap"
-        style={{ wordWrap: "break-word", whiteSpace: "break-spaces" }}
+        id="parse"
+        className="w-[full] flex flex-wrap rounded-lg overflow-hidden"
+        style={{
+          wordWrap: "break-word",
+          whiteSpace: "break-spaces",
+          borderRadius: "50px !important",
+        }}
       >
         <p
           style={{ wordWrap: "break-word" }}
-          className="text-[18px] font-normal mb-[25px] flex flex-wrap break-words"
+          className="text-[18px] font-normal mb-[25px] flex flex-wrap break-words rounded-lg overflow-hidden"
         >
           {parse(body.trim())}
         </p>

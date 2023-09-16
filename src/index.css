@@ -86,3 +86,6 @@ body {
 a:hover {
   color: inherit;
 }
+#parse img {
+  border-radius: 10px !important;
+}

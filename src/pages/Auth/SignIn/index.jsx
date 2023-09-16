@@ -16,7 +16,7 @@ const SignIn = () => {
     try {
       setIsLoading(true);
       const res = await signIn(values);
-      const data = res.data;
+      const data = await res.data;
       console.log(data);
       localStorage.setItem("token", data?.token);
       localStorage.setItem("username", data?.user.username);
