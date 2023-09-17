@@ -9,7 +9,6 @@ import {
 import { Dropdown, Popconfirm } from "antd";
 
 const Navbar = () => {
-  
   const confirm = () => {
     localStorage.clear();
     localStorage.removeItem("my_id");
@@ -55,7 +54,9 @@ const Navbar = () => {
   return (
     <div className="container flex items-center justify-between">
       <img
+        title="teletype blog app"
         src={Logo}
+        width="70px"
         alt="Logo"
         onClick={() => navigate("/")}
         className="cursor-pointer"
