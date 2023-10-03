@@ -3,17 +3,19 @@ import { useNavigate, useParams } from "react-router-dom";
 import useUsersApi from "../../service/users";
 import { Ping } from "@uiball/loaders";
 import Card from "../../components/Card";
-import { Button, Modal } from "antd";
+import { Button, Modal, message } from "antd";
 import { useDispatch, useSelector } from "react-redux";
-import { openModalFunc } from "../../store/modalSlice";
+import { openModalFunc, openProfileModal } from "../../store/modalSlice";
+import { SettingOutlined } from "@ant-design/icons";
+import { Label, TextInput, Button as Btn } from "flowbite-react";
 
 const Profile = () => {
   const { id } = useParams();
-  const { getOneUserById, followToUser } = useUsersApi();
+  const { getOneUserById, followToUser, editProfileUser } = useUsersApi();
   const navigate = useNavigate();
   const [data, setData] = useState({});
   const dispatch = useDispatch();
-  const { openModal } = useSelector((state) => state.reducer);
+  const { openModal, profileModal } = useSelector((state) => state.reducer);
 
   const [title, setTitle] = useState("");
   const [isFollow, setIsFollow] = useState({});
@@ -43,6 +45,35 @@ const Profile = () => {
       console.log(error);
       setIsLoading(false);
     }
+  };
+
+  const editProfile = () => {
+    dispatch(openProfileModal(true));
+  };
+
+  const changeProfile = (e) => {
+    e.preventDefault();
+    setIsLoading(true);
+    const [full_name, username, password] = e.target.querySelectorAll("input");
+    editProfileUser(
+      {
+        full_name: full_name.value,
+        username: username.value,
+        password: password.value,
+      },
+      localStorage.getItem("my_id")
+    )
+      .then((res) => {
+        console.log(res.data);
+        message.success("Profile updated successfully");
+        res.data && setIsLoading(false);
+        res.data && window.location.reload();
+      })
+      .catch((err) => {
+        console.log(err);
+        setIsLoading(false);
+        message.error(err.response.data.message);
+      });
   };
 
   return (
@@ -82,6 +113,52 @@ const Profile = () => {
         </div>
       </Modal>
 
+      <Modal
+        title="Edit profile"
+        onCancel={() => dispatch(openProfileModal(false))}
+        open={profileModal}
+        okButtonProps={{ style: { display: "none" } }}
+        cancelButtonProps={{ style: { display: "none" } }}
+      >
+        <form
+          onSubmit={(e) => changeProfile(e)}
+          className="flex flex-col gap-3 pt-4"
+        >
+          <div>
+            <Label htmlFor="fullname">Full name</Label>
+            <TextInput
+              className="inp"
+              required
+              defaultValue={data?.full_name}
+              id="fullname"
+            />
+          </div>
+          <div>
+            <Label htmlFor="username">Username</Label>
+            <TextInput
+              className="inp"
+              required
+              defaultValue={data?.username}
+              id="username"
+            />
+          </div>
+          <div>
+            <Label htmlFor="password">New password</Label>
+            <TextInput className="inp" required id="password" />
+          </div>
+
+          <Button
+            loading={isLoading}
+            size="large"
+            className="mt-3"
+            type="primary"
+            htmlType="submit"
+          >
+            Edit profile
+          </Button>
+        </form>
+      </Modal>
+
       {data.id ? (
         <div className="flex gap-[40px] w-full mt-[40px] relative">
           <div className="w-full max-w-[400px] mt-[30px] fixed">
@@ -94,6 +171,11 @@ const Profile = () => {
                 />
               </div>
               <div className="mx-[20px] bg-[rgba(255,255,255,0.7)] shadow-md p-2 backdrop-blur-[3px] rounded-[20px] absolute bottom-[-40px] w-[calc(100%-40px)]">
+                <SettingOutlined
+                  className="absolute right-[10px] bottom-[10px] p-1 cursor-pointer rounded-md hover:bg-[rgba(0,0,0,0.1)] duration-150"
+                  onClick={() => editProfile()}
+                />
+
                 <h1 className="text-[25px] font-semibold text-center">
                   {data?.full_name}
                 </h1>
@@ -111,7 +193,7 @@ const Profile = () => {
               </div>
               <div
                 onClick={() => showModal("Followers")}
-                className="flex items-center px-2 py-1 cursor-pointer rounded-md hover:bg-[rgba(0,0,0,0.1)]"
+                className="flex items-center px-2 py-1 cursor-pointer rounded-md hover:bg-[rgba(0,0,0,0.1)] duration-200"
               >
                 <p>
                   <span className="font-bold">{data?.followers.length}</span>{" "}
@@ -120,7 +202,7 @@ const Profile = () => {
               </div>
               <div
                 onClick={() => showModal("Followings")}
-                className="flex items-center px-2 py-1 cursor-pointer rounded-md hover:bg-[rgba(0,0,0,0.1)]"
+                className="flex items-center px-2 py-1 cursor-pointer rounded-md hover:bg-[rgba(0,0,0,0.1)] duration-200"
               >
                 <p>
                   <span className="font-bold">{data?.followings.length}</span>{" "}

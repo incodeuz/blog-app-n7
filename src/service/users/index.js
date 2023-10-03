@@ -13,12 +13,15 @@ const useUsersApi = () => {
   const getAllUsers = async () => api.get("/user");
   const getOneUserById = async (id) => api.get(`/user/${id}`);
   const followToUser = async (data) => api.post(`/follow`, { ...data }, config);
+  const editProfileUser = async (data, id) =>
+    api.patch(`/user/${id}`, { ...data }, config);
   return {
     signIn,
     signUp,
     getAllUsers,
     getOneUserById,
     followToUser,
+    editProfileUser,
   };
 };
 
